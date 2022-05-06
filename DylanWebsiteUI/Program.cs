@@ -1,14 +1,11 @@
 using DylanWebsiteLibrary.DataAccess;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using DylanWebsiteUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IPeopleData, PeopleData>();
+builder.ConfigureServices();
 
 var app = builder.Build();
 
