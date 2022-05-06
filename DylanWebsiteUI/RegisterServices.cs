@@ -9,5 +9,7 @@ public static class RegisterServices
         builder.Services.AddServerSideBlazor();
         builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
         builder.Services.AddTransient<IPeopleData, PeopleData>();
+
+        
     }
 }
