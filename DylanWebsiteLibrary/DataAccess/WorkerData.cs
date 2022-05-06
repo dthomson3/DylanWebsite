@@ -17,7 +17,7 @@ public class WorkerData : IWorkerData
 
     public Task InsertWorker(WorkerModel worker)
     {
-        string sql = @"insert int dbo.Worker (FirstName, LastName, EmailAddress, EmploymentType)
+        string sql = @"insert into dbo.Workers (FirstName, LastName, EmailAddress, EmploymentType)
                       values (@FirstName, @LastName, @EmailAddress @EmploymentType);";
 
         return _db.SaveData(sql, worker);

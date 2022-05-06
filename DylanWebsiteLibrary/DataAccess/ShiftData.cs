@@ -17,7 +17,7 @@ public class ShiftData : IShiftData
 
     public Task InsertShift(ShiftModel shift)
     {
-        string sql = @"insert int dbo.Shifts (ShiftType, WorkerId, Date, StartTime, EndTime)
+        string sql = @"insert into dbo.Shifts (ShiftType, WorkerId, Date, StartTime, EndTime)
                       values (@ShiftType, @WorkerId, @Date, @StartTime, @EndTime);";
 
         return _db.SaveData(sql, shift);
