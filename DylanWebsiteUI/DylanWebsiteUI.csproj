@@ -12,4 +12,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DylanWebsiteLibrary\DylanWebsiteLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
