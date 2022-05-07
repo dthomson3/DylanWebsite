@@ -26,6 +26,17 @@ public class SqlDataAccess : ISqlDataAccess
         }
     }
 
+    public async Task<T> LoadSingleData<T>(string sql)
+    {
+        string connectionString = _config.GetConnectionString(ConnectionStringName);
+
+        using (IDbConnection connection = new SqlConnection(connectionString))
+        {
+            var data = await connection.QueryAsync<T>(sql);
+            return data.Single();
+        }
+    }
+
     public async Task SaveData<T>(string sql, T parameters)
     {
         string connectionString = _config.GetConnectionString(ConnectionStringName);

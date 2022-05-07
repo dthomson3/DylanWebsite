@@ -3,13 +3,14 @@
 @using DylanWebsiteLibrary
 @using DylanWebsiteLibrary.Models
 
-@inject IWorkerData _workerDb
+@inject IShiftData _shiftsDb
+@inject IWorkerData _workersDb
 
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+Below is the data from the Workers and Shifts tables
 
 @if (workers is null)
 {
@@ -40,11 +41,47 @@ else
 	</table>
 }
 
+@if(shifts is null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class ="table table-striped">
+		<thead>
+			<tr>
+				<th>Shift Type</th>
+				<th>Worker Id</th>
+				<th>Start Time</th>
+				<th>End Time</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var shift in shifts)
+			{
+				<tr>
+					<th>@shift.ShiftType</th>
+				<th>@shift.WorkerId</th>
+				<th>@shift.StartTime</th>
+				<th>@shift.EndTime</th>
+				<th>@shift.Date</th>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
 @code{
+	private List<ShiftModel> shifts;
 	private List<WorkerModel> workers;
 
 	protected override async Task OnInitializedAsync()
 	{
-		workers = await _workerDb.GetWorkers();
+		workers = await _workersDb.GetWorkers();
+		shifts = await _shiftsDb.GetShifts();
 	}
+
+
+	
 }

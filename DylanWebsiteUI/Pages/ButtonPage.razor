@@ -1,0 +1,262 @@
+﻿@page "/Buttons"
+
+@inject IWorkerData _workersDb
+@inject IShiftData _shiftDb
+
+
+<head>
+	<link href="css/StyleSheet.css" rel="stylesheet" />
+	<link href="css/Calculator.css" rel="stylesheet" />
+</head>
+
+<body>
+	
+	<h3>ButtonPage</h3>
+
+	<input type="text" @bind="@Id"/>
+
+	<button type="submit" @onclick="@btn_OnClick">Submit</button>
+
+	<p>@someText</p>
+
+	<h2>Create New Shift</h2>
+	<button type="submit" @onclick="@btn_OnClick_CreateShift">Create Shift</button>
+
+
+	<div class="grid-container">
+
+		<div class="grid-item">
+			<label for="sStart">Shift Start</label>
+			<input type="text" id="sStart" name="sStart" @bind="@sStart"/>
+		</div>
+
+		<div class="grid-item">
+			<label for="sEnd">Shift End</label>
+			<input type="text" id="sEnd" name="sEnd" @bind="@sEnd"/>
+		</div>
+
+		<div class="grid-item">
+			<label for="sDate">Date</label>
+			<input type="text" id="sDate" name="sDate" @bind="@sDate"/>
+		</div>
+		<div class="grid-item">
+			<label for="sType">Shift Type</label>
+			<input type="text" id="sType" name="sType" @bind="@sType"/>
+		</div>
+		<div class="grid-item">
+			<label for="sEmpId">Id Of Worker</label>
+			<input type="text" id="sEmpId" name="sEmpId" @bind="@sEmpId"/>
+		</div>
+	</div>
+
+	<br />
+	<br />
+	<br />
+
+	<h3 class="calculator-h3">@displayedNum</h3>
+
+	<div class="calculator-container">
+		<!-- Row 1 -->
+		<button class="calculator-button-container" id="calc-7" @onclick=@btn_Seven_OnClick>7</button>
+		<button class="calculator-button-container" id="calc-8" @onclick=@btn_Eight_OnClick>8</button>
+		<button class="calculator-button-container" id="calc-9" @onclick=@btn_Nine_OnClick>9</button>
+		<button class="calculator-button-container" id="calc-divide" @onclick=@btn_Divide_OnClick>/</button>
+
+		<!-- Row 2 -->
+		  <button class="calculator-button-container" id="calc-4" @onclick=@btn_Four_OnClick>4</button>
+		  <button class="calculator-button-container" id="calc-5" @onclick=@btn_Five_OnClick>5</button>
+		  <button class="calculator-button-container" id="calc-6" @onclick=@btn_Six_OnClick>6</button>
+		  <button class="calculator-button-container" id="calc-multiply" @onclick=@btn_Multiply_OnClick>X</button>
+
+		<!-- Row 3 -->
+		  <button class="calculator-button-container" id="calc-1" @onclick=@btn_One_OnClick>1</button>
+		  <button class="calculator-button-container" id="calc-2" @onclick=@btn_Two_OnClick>2</button>
+		  <button class="calculator-button-container" id="calc-3" @onclick=@btn_Three_OnClick>3</button>
+		  <button class="calculator-button-container" id="calc-subtract" @onclick=@btn_Subtract_OnClick>-</button>
+
+		<!-- Row 4 -->
+		  <button class="calculator-button-container" id="calc-0" @onclick=@btn_Zero_OnClick>0</button>
+		  <button class="calculator-button-container" id="calc-decimal" @onclick=@btn_Decimal_OnClick>.</button>
+		  <button class="calculator-button-container" id="calc-equals" @onclick=@btn_Equals_OnClick>=</button>
+		  <button class="calculator-button-container" id="calc-add" @onclick=@btn_Add_OnClick>+</button>
+
+		<!-- Clear Button, last column, spans all rows -->
+		  <button class="calculator-button-container" id="calc-clear" @onclick=@btn_Clear_OnClick>C</button>
+
+	</div>
+
+</body>
+
+@code {
+	string someText = "Enter ID";
+	string Id="";
+
+	string sStart;
+	string sEnd;
+	string sDate;
+	string sType;
+	string sEmpId;
+
+	async Task btn_OnClick()
+	{
+		WorkerModel worker = new();
+		worker = await _workersDb.GetWorkerFromId(int.Parse(Id));
+		someText = worker.EmailAddress;
+	}
+
+	async Task btn_OnClick_CreateShift()
+	{
+		ShiftModel shift = new();
+		shift.StartTime = TimeSpan.Parse(sStart);
+		shift.EndTime = TimeSpan.Parse(sEnd);
+		shift.Date = DateTime.Parse(sDate);
+		shift.ShiftType = sType;
+		shift.WorkerId = sEmpId;
+
+		await _shiftDb.InsertShift(shift);
+	}
+
+	//calculator stuff
+	string displayedNum = "";
+	decimal savedNum;
+	string sign = "";
+
+	void btn_One_OnClick()
+	{
+		displayedNum += "1";
+	}
+
+	void btn_Two_OnClick()
+	{
+		displayedNum += "2";
+	}
+
+	void btn_Three_OnClick()
+	{
+		displayedNum += "3";
+	}
+
+	void btn_Four_OnClick()
+	{
+		displayedNum += "4";
+	}
+
+	void btn_Five_OnClick()
+	{
+		displayedNum += "5";
+	}
+
+	void btn_Six_OnClick()
+	{
+		displayedNum += "6";
+	}
+
+	void btn_Seven_OnClick()
+	{
+		displayedNum += "7";
+	}
+
+	void btn_Eight_OnClick()
+	{
+		displayedNum += "8";
+	}
+
+	void btn_Nine_OnClick()
+	{
+		displayedNum += "9";
+	}
+
+	void btn_Zero_OnClick()
+	{
+		displayedNum += "0";
+	}
+
+	void btn_Divide_OnClick()
+	{
+		PressSign("divide");
+	}
+
+	void btn_Multiply_OnClick()
+	{
+		PressSign("multiply");
+	}
+
+	void btn_Subtract_OnClick()
+	{
+		PressSign("subtract");
+	}
+
+	void btn_Add_OnClick()
+	{
+		PressSign("add");
+	}
+
+	void btn_Decimal_OnClick()
+	{
+		if (displayedNum.Contains('.'))
+		{
+			return;
+		}
+		else
+		{
+			displayedNum += ".";
+		}
+	}
+
+	void btn_Equals_OnClick()
+	{
+		decimal tempNum = GetSolution();
+		displayedNum = tempNum.ToString();
+		savedNum = tempNum;
+
+	}
+
+	void btn_Clear_OnClick()
+	{
+		displayedNum = "";
+		sign = "";
+		savedNum = 0;
+
+	}
+
+	void PressSign(string s)
+	{
+		if (sign == "")
+		{
+			savedNum = decimal.Parse(displayedNum);
+			sign = s;
+			displayedNum = "";
+		}
+		else
+		{
+			savedNum = GetSolution();
+			sign = s;
+			displayedNum = "";
+		}
+	}
+
+	decimal GetSolution()
+	{
+		if (displayedNum == null || displayedNum == string.Empty || displayedNum == "")
+        {
+            displayedNum = "0";
+        }
+        switch (sign)
+        {
+            case "add":
+                sign = "";
+                return savedNum + decimal.Parse(displayedNum);
+            case "subtract":
+                sign = "";
+                return savedNum - decimal.Parse(displayedNum);
+            case "multiply": 
+                sign = "";
+                return savedNum * decimal.Parse(displayedNum);
+            case "divide":
+                sign = "";
+                return savedNum / decimal.Parse(displayedNum);
+            default:
+                return 0;
+        }
+	}
+}
