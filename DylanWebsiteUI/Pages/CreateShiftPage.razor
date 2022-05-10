@@ -1,0 +1,90 @@
+﻿@page "/"
+
+@inject IShiftData _shiftDb
+@inject IWorkerData _workerDb
+@using System.Linq
+
+<head>
+	<link href="css/createshiftpage.css" rel="stylesheet" />
+</head>
+
+<body>
+	<h3>CreateShiftPage</h3>
+	
+	<EditForm Model="@newShift" OnSubmit="@CheckForValidInput">
+		<div class="grid-container-shift-input">
+			<div class="grid-item-shift-input">
+				<label for="ShiftType">Shift Type</label>
+
+			</div>
+			<div class="grid-item-shift-input">
+				<InputSelect id="ShiftType" @bind-Value="@newShift.ShiftType">
+					<option>@GlobalConsts.SHIFT_DB_STRING</option>
+					<option>@GlobalConsts.RDO_DB_STRING</option>
+					<option>@GlobalConsts.AL_DB_STRING</option>
+				</InputSelect>
+			</div>
+			<div class="grid-item-shift-input">
+				<label for="WorkerId">Worker's Id:</label>
+			</div>
+			<div class="grid-item-shift-input">
+				<InputText id="WorkerId" @bind-Value="@newShift.WorkerId">WorkerId</InputText>
+			</div>
+			<div class="grid-item-shift-input">
+				<label for="date">Date of shift</label>
+			</div>
+			<div class="grid-item-shift-input">
+				<InputDate id="date" @bind-Value="@newShift.Date" required>Date</InputDate>
+			</div>
+			<div class="grid-item-shift-input">
+				<label for="startTime">Start Time</label>
+			</div>
+			<div class="grid-item-shift-input">
+				<input @bind-value="@startTime" type="time" step="300" required/>
+			</div>
+			<div class="grid-item-shift-input">
+				<label for="EndTime">End Time</label>
+			</div>
+			<div class="grid-item-shift-input">
+				<input @bind-value="@endTime" type="time"/>
+			</div>
+		</div>
+		<button type="submit">submit</button>
+	</EditForm>
+</body>
+
+
+@code {
+	ShiftModel newShift = new(){ Date = DateTime.Today };
+	DateTime startTime;
+	DateTime endTime;
+
+	async Task CreateNewShift()
+	{
+		await _shiftDb.InsertShift(newShift);
+	}
+
+	async Task CheckForValidInput()
+	{
+		Console.WriteLine("YES");
+		List<WorkerModel> workers = await _workerDb.GetWorkers();
+
+
+		List<string> validIds = workers.Select(i => i.Id).ToList();
+		Console.WriteLine(validIds.Count);
+		if (!validIds.Contains(newShift.WorkerId))
+		{
+			//Handle rejection.
+			Console.WriteLine("Worker Id must be  a valid Employee Id.");
+			return;
+		}
+		Console.WriteLine("reaches");
+
+		//convert the start and end times to the timespans that get saved
+		newShift.StartTime = startTime.TimeOfDay;
+		newShift.EndTime = endTime.TimeOfDay;
+
+		//if everything passes, all inputs are valid, call CreateNewShift
+		await CreateNewShift();
+	}
+}

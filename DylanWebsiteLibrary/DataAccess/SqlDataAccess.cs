@@ -15,7 +15,7 @@ public class SqlDataAccess : ISqlDataAccess
         _config = config;
     }
 
-    public async Task<List<T>> LoadData<T, U>(string sql, U parameters)
+    public async Task<List<T>> LoadDataAsync<T, U>(string sql, U parameters)
     {
         string connectionString = _config.GetConnectionString(ConnectionStringName);
 
@@ -26,7 +26,17 @@ public class SqlDataAccess : ISqlDataAccess
         }
     }
 
-    public async Task<T> LoadSingleData<T>(string sql)
+    public List<T> LoadData<T, U>(string sql, U parameters)
+    {
+        string connectionString = _config.GetConnectionString(ConnectionStringName);
+        using (IDbConnection connection = new SqlConnection(connectionString))
+        {
+            var data = connection.Query<T>(sql, parameters);
+            return data.ToList();
+        }
+    }
+
+    public async Task<T> LoadSingleDataAsync<T>(string sql)
     {
         string connectionString = _config.GetConnectionString(ConnectionStringName);
 
@@ -37,7 +47,19 @@ public class SqlDataAccess : ISqlDataAccess
         }
     }
 
-    public async Task SaveData<T>(string sql, T parameters)
+    public object LoadSingleData<T>(string sql)
+    {
+        string connectionString = _config.GetConnectionString(ConnectionStringName);
+
+        using (IDbConnection connection = new SqlConnection(connectionString))
+        {
+            var data = connection.Query<T>(sql);
+            return data.Single();
+        }
+    }
+
+
+    public async Task SaveDataAsync<T>(string sql, T parameters)
     {
         string connectionString = _config.GetConnectionString(ConnectionStringName);
 

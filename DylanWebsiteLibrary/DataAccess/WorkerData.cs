@@ -12,15 +12,15 @@ public class WorkerData : IWorkerData
     {
         string sql = "select * from dbo.Workers";
 
-        return _db.LoadData<WorkerModel, dynamic>(sql, new { });
+        return _db.LoadDataAsync<WorkerModel, dynamic>(sql, new { });
     }
 
-    public async Task<WorkerModel> GetWorkerFromId(int Id)
+    public async Task<WorkerModel> GetWorkerFromId(int id)
     {
         string sql = string.Format(@"select * from dbo.Workers 
-                       where Id = {0}", Id);
+                       where Id = {0}", id);
 
-        return await _db.LoadSingleData<WorkerModel>(sql);
+        return await _db.LoadSingleDataAsync<WorkerModel>(sql);
 
     }
 
@@ -29,6 +29,6 @@ public class WorkerData : IWorkerData
         string sql = @"insert into dbo.Workers (FirstName, LastName, EmailAddress, EmploymentType)
                       values (@FirstName, @LastName, @EmailAddress @EmploymentType);";
 
-        return _db.SaveData(sql, worker);
+        return _db.SaveDataAsync(sql, worker);
     }
 }

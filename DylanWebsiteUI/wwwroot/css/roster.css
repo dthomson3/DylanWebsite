@@ -1,0 +1,90 @@
+﻿h1 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bolder;
+}
+
+.grid-container-8-column {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-template-rows: repeat(auto);
+    background-color: #808080;
+    padding: 10px;
+}
+
+.grid-item-default {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.grid-item-default h1 {
+    font-size: 12px;
+    text-align: left;
+}
+
+.grid-item-default p {
+    grid-column-start:2;
+    font-size: 10px;
+    text-align: left;
+}
+
+.grid-title {
+    background-color: #250b67;
+}
+
+
+.grid-names {
+    grid-row: 1;
+    background-color: #ff00ee;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.grid-name {
+    background-color: #ffd800;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    font-size: 15px;
+    text-align: center;
+    grid-column: 1;
+}
+
+.grid-dates-container {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-template-rows: auto;
+    background-color: #808080;
+    padding: 10px;
+}
+
+.grid-dates-item {
+    display:inline-block;
+    text-align:center;
+}
+
+.Monday{
+    grid-column: 2;
+}
+.Tuesday {
+    grid-column: 3;
+}
+.Wednesday {
+    grid-column: 4;
+}
+.Thursday {
+    grid-column: 5;
+}
+.Friday {
+    grid-column: 6;
+}
+.Saturday {
+    grid-column: 7;
+}
+.Sunday {
+    grid-column: 8;
+}

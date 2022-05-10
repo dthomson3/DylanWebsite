@@ -1,0 +1,17 @@
+﻿.grid-container-shift-input {
+    display: grid;
+    grid-template-columns: auto auto;
+    background-color: #c3c3c3;
+    padding: 10px;
+    width: 330px;
+}
+
+.grid-item-shift-input label {
+    width: 100px;
+}
+
+.grid-item-shift-input input{
+    width: 200px;
+}
+
+

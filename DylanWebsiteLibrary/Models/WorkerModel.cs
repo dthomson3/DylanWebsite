@@ -7,4 +7,6 @@ public class WorkerModel
     public string LastName { get; set; }
     public string EmailAddress { get; set; }
     public string EmploymentType { get; set; }
+
+    public List<ShiftModel> RosteredShifts { get; set; }
 }

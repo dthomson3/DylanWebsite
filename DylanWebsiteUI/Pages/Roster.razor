@@ -1,0 +1,68 @@
+﻿@page "/roster"
+
+@inject IShiftData _shiftDb
+@inject IWorkerData _workerDb
+@using Classes
+
+<head>
+	<link href="css/roster.css" rel="stylesheet" />
+</head>
+
+<body>
+	<h1>Hello World!</h1>
+
+	<div class="grid-dates-item">
+		<button @onclick="@_date.MoveBackWeek">&lt;</button>@_date.weekStart.ToShortDateString() to @_date.weekEnd.ToShortDateString()<button @onclick="@_date.MoveForwardWeek">&gt</button>
+	</div>
+
+
+	<div class="grid-container-8-column">
+		<div class="grid-names">Employees</div>
+
+		<!-- Row 1 (titles) -->
+		<div class="grid-item-default">Monday</div>
+		<div class="grid-item-default">Tuesday</div>
+		<div class="grid-item-default">Wednesday</div>
+		<div class="grid-item-default">Thursday</div>
+		<div class="grid-item-default">Friday</div>
+		<div class="grid-item-default">Saturday</div>
+		<div class="grid-item-default">Sunday</div>
+
+		<!-- Creates the rows for each worker and their shifts -->
+		@foreach (WorkerModel w in workers)
+		{
+			<div class="grid-name">@w.FirstName @w.LastName</div>
+			GetRosteredShifts(int.Parse(w.Id));
+			foreach (ShiftModel s in rosteredShifts)
+			{
+				<div class="@s.Date.DayOfWeek grid-item-default" >
+					<p>@s.Date.DayOfWeek</p>
+					<h1>@s.Date.ToString("dd/MM/yy")</h1>
+					<p>@s.StartTime - @s.EndTime</p>
+				</div>
+			}
+		}
+	</div>
+
+</body>
+
+@code{
+	List<ShiftModel> shifts = new();
+	List<WorkerModel> workers = new();
+	List<ShiftModel> rosteredShifts = new();
+	private Dates _date = new Dates();
+
+	//runs when page is loaded
+	protected override async Task OnInitializedAsync()
+	{
+		shifts = await _shiftDb.GetShiftsAsync();
+		workers = await _workerDb.GetWorkers();
+	}
+
+	async Task GetRosteredShifts(int workerId)
+	{
+		rosteredShifts = _shiftDb.GetShiftsBetweenDatesForWorker(workerId, _date.weekStart, _date.weekEnd);
+
+	}
+
+}
